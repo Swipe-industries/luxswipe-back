@@ -18,8 +18,11 @@ class UserViewSet(viewsets.ViewSet):
                 'SK': 'PROFILE',
                 'uid': user.uid,
                 'name': user.name,
-                'bio': user.bio
             }
+            
+            # only add bio to the data if it's provided
+            # if user.bio:
+            #     data['bio'] = user.bio
             
             db.add_user(data)
             
