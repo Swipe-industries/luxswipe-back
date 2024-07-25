@@ -1,1 +1,1 @@
-# luxswipe-back
+Python based backend for luxswipe platform. 
