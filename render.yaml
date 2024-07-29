@@ -9,7 +9,7 @@ services:
     plan: free      # Adjust plan based on your requirements
     name: mysite     # Service name (customize if desired)
     runtime: python  # Ensure correct Python version (check requirements.txt)
-    buildCommand: "./build.sh"  # Replace placeholder with your build command (if applicable)
+   # buildCommand: "./build.sh"  # Replace placeholder with your build command (if applicable)
     startCommand: "gunicorn mysite.wsgi:application -k gevent"  # Optimized start command
     envVars:
       - key: DATABASE_URL
