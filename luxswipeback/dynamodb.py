@@ -2,6 +2,7 @@ import boto3
 import os
 from dotenv import load_dotenv
 from botocore.exceptions import ClientError
+from boto3.dynamodb.conditions import Key
 
 
 load_dotenv()
@@ -41,7 +42,7 @@ class DynamoDB:
             print(f"An unexpected error occured: {e}")
             raise
     
-    def get_user(self, uid):
+    def get_user_info(self, uid):
         """
         
         Fetch user details from DynamoDB using uid.
@@ -68,7 +69,7 @@ class DynamoDB:
             print(f"An unexpected error occurred: {e}")
             return None
         
-    def check_user(self, username):
+    def check_username(self, username):
         """
         
         Checks either the username is awailable or not
@@ -86,6 +87,30 @@ class DynamoDB:
                 }
             )
             return response.get('Item', None)
+        except ClientError as e:
+            print(f"An error occurred: {e.response['Error']['Message']}")
+            return None #handle the error at frontend if return type is None
+        
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            return None
+        
+    def get_user_data(self, username):
+        """
+        
+        This function fetches all details of the user including his posts, wardrobes and external stores
+        
+        :param username: the username to querry the database
+        :return: User details if found, else None
+        
+        """
+        
+        try:
+            response = self.table.query(
+                KeyConditionExpression=Key('username').eq(username) & Key('SK').begins_with('PROFILE'),
+            )
+            return response.get('Items', None)
+        
         except ClientError as e:
             print(f"An error occurred: {e.response['Error']['Message']}")
             return None #handle the error at frontend if return type is None
