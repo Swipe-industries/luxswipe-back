@@ -1,21 +1,24 @@
 databases:
-  - name: mysitedb
-    plan: free
-    databaseName: mysite
-    user: mysite
+  - name: mysitedb  # Database name (customize if needed)
+    plan: free      # Adjust plan based on your requirements
+    databaseName: mysite   # Your database name
+    user: mysite     # Your database user
 
 services:
   - type: web
-    plan: free
-    name: mysite
-    runtime: python
-    buildCommand: "./build.sh"
-    startCommand: "python -m gunicorn mysite.asgi:application -k uvicorn.workers.UvicornWorker"    envVars:
+    plan: free      # Adjust plan based on your requirements
+    name: mysite     # Service name (customize if desired)
+    runtime: python  # Ensure correct Python version (check requirements.txt)
+    buildCommand: "./build.sh"  # Replace placeholder with your build command (if applicable)
+    startCommand: "gunicorn mysite.wsgi:application -k gevent"  # Optimized start command
+    envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: mysitedb
           property: connectionString
       - key: SECRET_KEY
-        generateValue: true
-      - key: WEB_CONCURRENCY
-        value: 4
+        generateValue: true  # Securely generate secret key
+      - key: DEBUG   # Set DEBUG to False in production
+        value: false  # Disable debug mode for security
+      - key: ALLOWED_HOSTS  # Add your domain name(s) for security
+        value: "*"  # Replace with specific allowed hosts in production
